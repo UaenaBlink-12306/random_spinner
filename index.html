@@ -8,27 +8,34 @@
 </head>
 <body>
   <div class="backdrop" aria-hidden="true"></div>
+  <div id="confettiLayer" class="confetti-layer" aria-hidden="true"></div>
   <main class="app-shell">
+    <section id="pickBanner" class="pick-banner" aria-live="polite" aria-atomic="true">
+      <p class="meta-label">Picked</p>
+      <h2 id="bannerTitle">Category 1</h2>
+      <p id="bannerSubtitle">Removed from the wheel.</p>
+    </section>
+
     <header class="hero">
       <p class="eyebrow">HTML + CSS + JavaScript</p>
       <h1>Category Picker Wheel</h1>
-      <p class="hero-copy">Spin through nine editable categories with no repeats until every slice has been used once.</p>
+      <p class="hero-copy">Start with nine categories, add more whenever you want, and watch each picked slice disappear until the wheel is empty.</p>
     </header>
 
     <div class="workspace">
       <section class="wheel-panel" aria-labelledby="wheel-heading">
         <div class="panel-copy">
-          <p class="rule-pill">No repeat picks inside a round</p>
-          <h2 id="wheel-heading">Spin, clear the round, then start fresh.</h2>
-          <p id="roundMessage">Round 1 is ready. Every category is available.</p>
+          <p class="rule-pill">Picked slices vanish from the active wheel</p>
+          <h2 id="wheel-heading">Spin until the wheel is empty, then reload the full list.</h2>
+          <p id="roundMessage">Round 1 is ready. Nine categories are on the wheel.</p>
         </div>
 
         <div class="wheel-stage">
           <div class="wheel-pointer" aria-hidden="true"></div>
           <canvas id="wheelCanvas" width="720" height="720" aria-label="Editable picker wheel"></canvas>
           <div class="wheel-core" aria-hidden="true">
-            <span>9</span>
-            <small>slots</small>
+            <span id="wheelCount">9</span>
+            <small id="wheelCountLabel">left</small>
           </div>
         </div>
 
@@ -39,11 +46,11 @@
 
         <section class="result-band" aria-live="polite">
           <div>
-            <p class="meta-label">Selected category</p>
+            <p class="meta-label">Last picked</p>
             <h3 id="resultText">Waiting for the first spin</h3>
           </div>
           <div class="result-stats">
-            <p id="remainingCount">9 picks left in Round 1</p>
+            <p id="remainingCount">9 categories remain on the wheel</p>
             <p id="roundCount">Round 1</p>
           </div>
         </section>
@@ -52,51 +59,15 @@
       <section class="control-panel" aria-labelledby="controls-heading">
         <div class="panel-copy">
           <p class="eyebrow">Editable categories</p>
-          <h2 id="controls-heading">Rewrite any slice, then apply the changes.</h2>
-          <p>Updating the labels restarts the no-repeat cycle so the next round stays accurate.</p>
+          <h2 id="controls-heading">Rewrite, remove, or add categories before applying the new wheel.</h2>
+          <p>The editor starts with nine entries, but you can grow the list whenever you need more slices.</p>
         </div>
 
         <form id="categoryForm" class="category-form">
-          <div class="category-grid">
-            <label class="category-field">
-              <span>Category 1</span>
-              <input id="category-1" maxlength="28" autocomplete="off" />
-            </label>
-            <label class="category-field">
-              <span>Category 2</span>
-              <input id="category-2" maxlength="28" autocomplete="off" />
-            </label>
-            <label class="category-field">
-              <span>Category 3</span>
-              <input id="category-3" maxlength="28" autocomplete="off" />
-            </label>
-            <label class="category-field">
-              <span>Category 4</span>
-              <input id="category-4" maxlength="28" autocomplete="off" />
-            </label>
-            <label class="category-field">
-              <span>Category 5</span>
-              <input id="category-5" maxlength="28" autocomplete="off" />
-            </label>
-            <label class="category-field">
-              <span>Category 6</span>
-              <input id="category-6" maxlength="28" autocomplete="off" />
-            </label>
-            <label class="category-field">
-              <span>Category 7</span>
-              <input id="category-7" maxlength="28" autocomplete="off" />
-            </label>
-            <label class="category-field">
-              <span>Category 8</span>
-              <input id="category-8" maxlength="28" autocomplete="off" />
-            </label>
-            <label class="category-field">
-              <span>Category 9</span>
-              <input id="category-9" maxlength="28" autocomplete="off" />
-            </label>
-          </div>
+          <div id="categoryEditor" class="category-editor"></div>
 
           <div class="form-actions">
+            <button id="addCategoryButton" class="ghost-button" type="button">Add category</button>
             <button class="primary-button" type="submit">Apply category changes</button>
             <button id="defaultsButton" class="ghost-button" type="button">Restore defaults</button>
           </div>
@@ -105,10 +76,10 @@
         <section class="tracker-panel" aria-labelledby="tracker-heading">
           <div class="tracker-head">
             <div>
-              <p class="meta-label">Round progress</p>
-              <h3 id="tracker-heading">Current availability</h3>
+              <p class="meta-label">Active wheel</p>
+              <h3 id="tracker-heading">Categories still in play</h3>
             </div>
-            <p class="tracker-note">Used slices stay locked until the round is complete.</p>
+            <p class="tracker-note">Picked categories disappear from the wheel until the next reload.</p>
           </div>
           <div id="progressBadges" class="progress-badges"></div>
         </section>
