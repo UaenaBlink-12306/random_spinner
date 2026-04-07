@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Category Picker Wheel</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="backdrop" aria-hidden="true"></div>
+  <main class="app-shell">
+    <header class="hero">
+      <p class="eyebrow">HTML + CSS + JavaScript</p>
+      <h1>Category Picker Wheel</h1>
+      <p class="hero-copy">Spin through nine editable categories with no repeats until every slice has been used once.</p>
+    </header>
+
+    <div class="workspace">
+      <section class="wheel-panel" aria-labelledby="wheel-heading">
+        <div class="panel-copy">
+          <p class="rule-pill">No repeat picks inside a round</p>
+          <h2 id="wheel-heading">Spin, clear the round, then start fresh.</h2>
+          <p id="roundMessage">Round 1 is ready. Every category is available.</p>
+        </div>
+
+        <div class="wheel-stage">
+          <div class="wheel-pointer" aria-hidden="true"></div>
+          <canvas id="wheelCanvas" width="720" height="720" aria-label="Editable picker wheel"></canvas>
+          <div class="wheel-core" aria-hidden="true">
+            <span>9</span>
+            <small>slots</small>
+          </div>
+        </div>
+
+        <div class="action-row">
+          <button id="spinButton" class="primary-button" type="button">Spin the wheel</button>
+          <button id="resetButton" class="ghost-button" type="button">Reset round</button>
+        </div>
+
+        <section class="result-band" aria-live="polite">
+          <div>
+            <p class="meta-label">Selected category</p>
+            <h3 id="resultText">Waiting for the first spin</h3>
+          </div>
+          <div class="result-stats">
+            <p id="remainingCount">9 picks left in Round 1</p>
+            <p id="roundCount">Round 1</p>
+          </div>
+        </section>
+      </section>
+
+      <section class="control-panel" aria-labelledby="controls-heading">
+        <div class="panel-copy">
+          <p class="eyebrow">Editable categories</p>
+          <h2 id="controls-heading">Rewrite any slice, then apply the changes.</h2>
+          <p>Updating the labels restarts the no-repeat cycle so the next round stays accurate.</p>
+        </div>
+
+        <form id="categoryForm" class="category-form">
+          <div class="category-grid">
+            <label class="category-field">
+              <span>Category 1</span>
+              <input id="category-1" maxlength="28" autocomplete="off" />
+            </label>
+            <label class="category-field">
+              <span>Category 2</span>
+              <input id="category-2" maxlength="28" autocomplete="off" />
+            </label>
+            <label class="category-field">
+              <span>Category 3</span>
+              <input id="category-3" maxlength="28" autocomplete="off" />
+            </label>
+            <label class="category-field">
+              <span>Category 4</span>
+              <input id="category-4" maxlength="28" autocomplete="off" />
+            </label>
+            <label class="category-field">
+              <span>Category 5</span>
+              <input id="category-5" maxlength="28" autocomplete="off" />
+            </label>
+            <label class="category-field">
+              <span>Category 6</span>
+              <input id="category-6" maxlength="28" autocomplete="off" />
+            </label>
+            <label class="category-field">
+              <span>Category 7</span>
+              <input id="category-7" maxlength="28" autocomplete="off" />
+            </label>
+            <label class="category-field">
+              <span>Category 8</span>
+              <input id="category-8" maxlength="28" autocomplete="off" />
+            </label>
+            <label class="category-field">
+              <span>Category 9</span>
+              <input id="category-9" maxlength="28" autocomplete="off" />
+            </label>
+          </div>
+
+          <div class="form-actions">
+            <button class="primary-button" type="submit">Apply category changes</button>
+            <button id="defaultsButton" class="ghost-button" type="button">Restore defaults</button>
+          </div>
+        </form>
+
+        <section class="tracker-panel" aria-labelledby="tracker-heading">
+          <div class="tracker-head">
+            <div>
+              <p class="meta-label">Round progress</p>
+              <h3 id="tracker-heading">Current availability</h3>
+            </div>
+            <p class="tracker-note">Used slices stay locked until the round is complete.</p>
+          </div>
+          <div id="progressBadges" class="progress-badges"></div>
+        </section>
+
+        <section class="history-panel" aria-labelledby="history-heading">
+          <div class="tracker-head">
+            <div>
+              <p class="meta-label">Recent picks</p>
+              <h3 id="history-heading">Selection history</h3>
+            </div>
+            <p class="tracker-note">Newest result appears first.</p>
+          </div>
+          <ol id="historyList" class="history-list"></ol>
+        </section>
+      </section>
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
