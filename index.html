@@ -9,13 +9,15 @@
 <body>
   <div class="backdrop" aria-hidden="true"></div>
   <div id="confettiLayer" class="confetti-layer" aria-hidden="true"></div>
-  <main class="app-shell">
-    <section id="pickBanner" class="pick-banner" aria-live="polite" aria-atomic="true">
+  <div id="winnerOverlay" class="winner-overlay" hidden>
+    <section class="winner-modal" role="dialog" aria-modal="true" aria-labelledby="winnerTitle" aria-describedby="winnerSubtitle">
+      <button id="winnerCloseButton" class="modal-close-button" type="button" aria-label="Close picked category popup">&times;</button>
       <p class="meta-label">Picked</p>
-      <h2 id="bannerTitle">Category 1</h2>
-      <p id="bannerSubtitle">Removed from the wheel.</p>
+      <h2 id="winnerTitle">Category 1</h2>
+      <p id="winnerSubtitle">Removed from the wheel.</p>
     </section>
-
+  </div>
+  <main class="app-shell">
     <header class="hero">
       <p class="eyebrow">HTML + CSS + JavaScript</p>
       <h1>Category Picker Wheel</h1>

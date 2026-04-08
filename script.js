@@ -17,8 +17,6 @@ const SEGMENT_COLORS = [
 ];
 const FULL_TURN = Math.PI * 2;
 const INITIAL_ROTATION = -Math.PI / 2;
-const BANNER_DURATION_MS = 2400;
-const CONFETTI_DURATION_MS = 2600;
 
 const canvas = document.getElementById("wheelCanvas");
 const ctx = canvas.getContext("2d");
@@ -36,10 +34,11 @@ const progressBadges = document.getElementById("progressBadges");
 const historyList = document.getElementById("historyList");
 const wheelCount = document.getElementById("wheelCount");
 const wheelCountLabel = document.getElementById("wheelCountLabel");
-const pickBanner = document.getElementById("pickBanner");
-const bannerTitle = document.getElementById("bannerTitle");
-const bannerSubtitle = document.getElementById("bannerSubtitle");
 const confettiLayer = document.getElementById("confettiLayer");
+const winnerOverlay = document.getElementById("winnerOverlay");
+const winnerTitle = document.getElementById("winnerTitle");
+const winnerSubtitle = document.getElementById("winnerSubtitle");
+const winnerCloseButton = document.getElementById("winnerCloseButton");
 
 let categories = loadCategories();
 let activeCategories = [];
@@ -50,8 +49,7 @@ let currentRotation = INITIAL_ROTATION;
 let spinning = false;
 let nextCategoryId = 1;
 let highlightedCategoryId = null;
-let bannerTimerId = null;
-let confettiTimerId = null;
+let modalReturnFocusTarget = null;
 
 renderCategoryEditor(categories);
 resetState(`Round 1 is ready. ${categories.length} ${pluralize("category", categories.length)} are on the wheel.`);
@@ -64,6 +62,10 @@ defaultsButton.addEventListener("click", restoreDefaults);
 addCategoryButton.addEventListener("click", addCategoryField);
 categoryForm.addEventListener("submit", applyCategoryChanges);
 categoryEditor.addEventListener("click", handleCategoryEditorClick);
+winnerCloseButton.addEventListener("click", () => {
+  hideWinnerModal({ restoreFocus: true });
+});
+window.addEventListener("keydown", handleWindowKeydown);
 
 function loadCategories() {
   try {
@@ -97,7 +99,15 @@ function sanitizeCategory(value, index) {
 }
 
 function pluralize(word, count) {
-  return count === 1 ? word : `${word}s`;
+  if (count === 1) {
+    return word;
+  }
+
+  if (word.endsWith("y")) {
+    return `${word.slice(0, -1)}ies`;
+  }
+
+  return `${word}s`;
 }
 
 function renderCategoryEditor(labels) {
@@ -227,7 +237,7 @@ function resetState(message) {
   lastPickedLabel = null;
   highlightedCategoryId = null;
   currentRotation = INITIAL_ROTATION;
-  hideBanner();
+  hideWinnerModal();
   clearConfetti();
   renderWheel();
   updateStatus(message);
@@ -269,7 +279,7 @@ function spinWheel() {
   const duration = 3400;
   const startTime = performance.now();
 
-  hideBanner();
+  hideWinnerModal();
   setInteractiveState(true);
   roundMessage.textContent = `Spinning Round ${roundNumber}...`;
 
@@ -295,16 +305,15 @@ function spinWheel() {
     highlightedCategoryId = null;
     currentRotation = INITIAL_ROTATION;
     renderWheel();
-    showPickBanner(chosenCategory.label, buildBannerSubtitle());
-    launchConfetti();
     updateStatus();
     setInteractiveState(false);
+    showWinnerModal(chosenCategory.label, buildWinnerSubtitle());
   }
 
   requestAnimationFrame(animate);
 }
 
-function buildBannerSubtitle() {
+function buildWinnerSubtitle() {
   if (activeCategories.length === 0) {
     return `Round ${roundNumber} is clear. The next spin reloads all ${categories.length} ${pluralize("category", categories.length)}.`;
   }
@@ -566,43 +575,55 @@ function shorten(value, maxLength) {
   return `${value.slice(0, Math.max(maxLength - 3, 1))}...`;
 }
 
-function showPickBanner(label, subtitle) {
-  bannerTitle.textContent = label;
-  bannerSubtitle.textContent = subtitle;
-  pickBanner.classList.remove("is-visible");
-  void pickBanner.offsetWidth;
-  pickBanner.classList.add("is-visible");
-
-  if (bannerTimerId) {
-    window.clearTimeout(bannerTimerId);
+function handleWindowKeydown(event) {
+  if (event.key !== "Escape" || winnerOverlay.hidden) {
+    return;
   }
 
-  bannerTimerId = window.setTimeout(() => {
-    pickBanner.classList.remove("is-visible");
-  }, BANNER_DURATION_MS);
+  hideWinnerModal({ restoreFocus: true });
 }
 
-function hideBanner() {
-  if (bannerTimerId) {
-    window.clearTimeout(bannerTimerId);
-    bannerTimerId = null;
+function showWinnerModal(label, subtitle) {
+  winnerTitle.textContent = label;
+  winnerSubtitle.textContent = subtitle;
+  modalReturnFocusTarget = document.activeElement instanceof HTMLElement
+    ? document.activeElement
+    : spinButton;
+
+  winnerOverlay.hidden = false;
+  winnerOverlay.classList.remove("is-visible");
+  void winnerOverlay.offsetWidth;
+  winnerOverlay.classList.add("is-visible");
+  document.body.classList.add("modal-open");
+  launchConfetti();
+  winnerCloseButton.focus();
+}
+
+function hideWinnerModal({ restoreFocus = false } = {}) {
+  winnerOverlay.hidden = true;
+  winnerOverlay.classList.remove("is-visible");
+  document.body.classList.remove("modal-open");
+  clearConfetti();
+
+  if (restoreFocus) {
+    (modalReturnFocusTarget ?? spinButton).focus();
   }
 
-  pickBanner.classList.remove("is-visible");
+  modalReturnFocusTarget = null;
 }
 
 function launchConfetti() {
   clearConfetti();
 
-  const pieceCount = Math.min(48, Math.max(24, categories.length * 3));
+  const pieceCount = Math.min(72, Math.max(28, categories.length * 4));
 
   for (let index = 0; index < pieceCount; index += 1) {
     const piece = document.createElement("span");
-    const size = `${8 + Math.random() * 8}px`;
-    const drift = `${-160 + Math.random() * 320}px`;
-    const rotate = `${-260 + Math.random() * 520}deg`;
-    const duration = `${1200 + Math.random() * 900}ms`;
-    const delay = `${Math.random() * 140}ms`;
+    const size = `${7 + Math.random() * 10}px`;
+    const drift = `${-220 + Math.random() * 440}px`;
+    const rotate = `${-360 + Math.random() * 720}deg`;
+    const duration = `${2400 + Math.random() * 1200}ms`;
+    const delay = `${-Math.random() * 3200}ms`;
 
     piece.className = `confetti-piece${Math.random() > 0.55 ? " square" : ""}`;
     piece.style.setProperty("--left", `${Math.random() * 100}%`);
@@ -614,17 +635,8 @@ function launchConfetti() {
     piece.style.setProperty("--delay", delay);
     confettiLayer.appendChild(piece);
   }
-
-  confettiTimerId = window.setTimeout(() => {
-    clearConfetti();
-  }, CONFETTI_DURATION_MS);
 }
 
 function clearConfetti() {
-  if (confettiTimerId) {
-    window.clearTimeout(confettiTimerId);
-    confettiTimerId = null;
-  }
-
   confettiLayer.replaceChildren();
 }
