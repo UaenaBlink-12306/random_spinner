@@ -187,16 +187,16 @@ input:focus-visible {
   width: min(1440px, calc(100% - 24px));
   min-height: 100svh;
   margin: 0 auto;
-  padding: 12px 0 14px;
+  padding: 8px 0 10px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
 }
 
 .hero {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
-  gap: 4px 18px;
+  gap: 2px 14px;
   align-items: center;
   padding: 0 6px;
 }
@@ -226,7 +226,7 @@ input:focus-visible {
 
 .hero h1 {
   max-width: none;
-  font-size: clamp(1.95rem, 3vw, 2.8rem);
+  font-size: clamp(1.75rem, 2.6vw, 2.4rem);
   letter-spacing: -0.04em;
   line-height: 0.9;
 }
@@ -235,14 +235,14 @@ input:focus-visible {
   max-width: 72ch;
   margin: 0;
   justify-self: end;
-  font-size: 0.94rem;
-  line-height: 1.4;
+  font-size: 0.89rem;
+  line-height: 1.3;
   color: var(--muted);
 }
 
 .workspace {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(300px, 330px);
+  grid-template-columns: minmax(0, 1fr) minmax(285px, 320px);
   gap: 14px;
   flex: 1;
   min-height: 0;
@@ -259,10 +259,10 @@ input:focus-visible {
 }
 
 .wheel-panel {
-  padding: 18px;
+  padding: 14px;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr) auto auto;
-  gap: 10px;
+  gap: 6px;
 }
 
 .control-panel {
@@ -276,7 +276,7 @@ input:focus-visible {
 
 .panel-copy {
   display: grid;
-  gap: 6px;
+  gap: 4px;
 }
 
 .panel-copy p,
@@ -286,7 +286,7 @@ input:focus-visible {
 }
 
 .panel-copy h2 {
-  font-size: clamp(1.08rem, 1.8vw, 1.6rem);
+  font-size: clamp(1rem, 1.5vw, 1.34rem);
 }
 
 .control-panel .panel-copy h2 {
@@ -297,18 +297,18 @@ input:focus-visible {
 .panel-copy > p:last-child,
 #roundMessage {
   max-width: 64ch;
-  line-height: 1.34;
+  line-height: 1.26;
   color: var(--muted);
   text-transform: none;
   letter-spacing: normal;
-  font-size: 0.9rem;
+  font-size: 0.84rem;
 }
 
 .rule-pill {
   display: inline-flex;
   align-items: center;
   justify-self: start;
-  padding: 0.38rem 0.7rem;
+  padding: 0.3rem 0.58rem;
   border-radius: 999px;
   color: var(--accent-deep);
   background: rgba(235, 91, 42, 0.12);
@@ -320,7 +320,7 @@ input:focus-visible {
   display: grid;
   place-items: center;
   min-height: 0;
-  padding: 14px 18px;
+  padding: 8px 14px;
   border-radius: 22px;
   background:
     radial-gradient(circle at center, rgba(255, 255, 255, 0.85) 0%, rgba(255, 249, 243, 0.72) 55%, rgba(242, 224, 196, 0.6) 100%);
@@ -339,7 +339,7 @@ input:focus-visible {
 
 #wheelCanvas {
   display: block;
-  width: min(100%, 540px, calc(100svh - 360px));
+  width: min(100%, 600px, calc(100svh - 335px));
   height: auto;
   filter: drop-shadow(0 16px 24px rgba(96, 63, 24, 0.18));
 }
@@ -359,29 +359,34 @@ input:focus-visible {
 
 .wheel-core {
   position: absolute;
-  display: grid;
-  place-items: center;
-  width: clamp(92px, 10vw, 112px);
-  aspect-ratio: 1;
-  border-radius: 50%;
+  top: 24px;
+  right: 24px;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  min-height: 48px;
+  padding: 0.7rem 0.95rem;
+  border-radius: 999px;
   background: linear-gradient(160deg, rgba(255, 249, 239, 0.98), rgba(255, 236, 204, 0.9));
   border: 1px solid rgba(67, 49, 24, 0.12);
   box-shadow: 0 8px 24px rgba(87, 59, 22, 0.14);
   text-transform: uppercase;
   pointer-events: none;
+  z-index: 3;
 }
 
 .wheel-core span {
   font-family: "Aptos Display", "Segoe UI Variable Display", "Trebuchet MS", sans-serif;
-  font-size: 1.9rem;
+  font-size: 1.35rem;
   font-weight: 700;
   line-height: 1;
 }
 
 .wheel-core small {
-  margin-top: -10px;
+  margin-top: 0;
   color: var(--muted);
-  letter-spacing: 0.18em;
+  letter-spacing: 0.14em;
+  font-size: 0.68rem;
 }
 
 .action-row,
@@ -403,7 +408,7 @@ input:focus-visible {
 
 .primary-button,
 .ghost-button {
-  padding: 0.7rem 1.05rem;
+  padding: 0.62rem 0.98rem;
 }
 
 .primary-button {
@@ -455,7 +460,7 @@ input:disabled {
 .tracker-panel,
 .history-panel {
   margin: 0;
-  padding: 14px 16px;
+  padding: 10px 14px;
   border-radius: var(--radius-lg);
   background: var(--surface-strong);
   border: 1px solid rgba(67, 49, 24, 0.08);
@@ -469,15 +474,15 @@ input:disabled {
 }
 
 .result-band h3 {
-  margin-top: 4px;
-  font-size: clamp(1.08rem, 1.8vw, 1.38rem);
+  margin-top: 2px;
+  font-size: clamp(1rem, 1.5vw, 1.24rem);
 }
 
 .result-stats {
   text-align: right;
   color: var(--muted);
-  line-height: 1.28;
-  font-size: 0.88rem;
+  line-height: 1.18;
+  font-size: 0.8rem;
 }
 
 .category-form {
